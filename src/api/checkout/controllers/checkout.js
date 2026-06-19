@@ -1,0 +1,222 @@
+// src/api/checkout/controllers/checkout.js
+"use strict";
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+
+module.exports = {
+  async create(ctx) {
+    try {
+      const { cartItems = [], email, userId } = ctx.request.body || {};
+
+      // ❌ No guest checkout
+      if (!userId) return ctx.badRequest("Login required to checkout");
+      if (!cartItems.length) return ctx.badRequest("Cart is empty");
+      if (!email) return ctx.badRequest("Email is required");
+
+      // 🛒 Build Stripe line items with productId in metadata
+      const line_items = cartItems.map((item) => ({
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: item.title,
+            images: item.image ? [item.image] : [],
+            metadata: {
+              productId: String(item.id), // 🔑 send Strapi productId
+            },
+          },
+          unit_amount: Math.round(Number(item.price) * 100), // ₹ → paise
+        },
+        quantity: Number(item.quantity || 1),
+      }));
+
+      // ✅ Create checkout session
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        payment_method_types: ["card"], // added UPI support
+        line_items,
+        customer_email: email,
+        billing_address_collection: "required",
+        phone_number_collection: { enabled: true },
+
+        success_url: `${process.env.FRONTEND_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+
+        // Attach order-level metadata
+        metadata: {
+          userId: String(userId),
+          email,
+          cart: JSON.stringify(
+            cartItems.map((item) => ({
+              id: item.id,
+              type: item.type,
+              title: item.title,
+              region: item.region,
+              quantity: item.quantity,
+              price: item.price,
+              image: item.image,  // include image too in CartItem (optional) if any error remove it.
+            }))
+          ),
+        },
+      });
+
+      ctx.body = { url: session.url, id: session.id };
+    } catch (err) {
+      strapi.log.error("❌ Stripe Checkout Error:", err);
+      return ctx.internalServerError("Unable to create checkout session");
+    }
+  },
+  async createCashfreeOrder(ctx) {
+    try {
+      const { cartItems = [], email, userId, total } = ctx.request.body || {};
+
+      if (!userId) return ctx.badRequest("Login required");
+      if (!cartItems.length) return ctx.badRequest("Cart empty");
+      if (!email) return ctx.badRequest("Email required");
+
+      // ✅ STEP 1: generate order_id ONCE
+      const order_id = "cf_" + Date.now();
+
+      // ✅ STEP 2: create order in Cashfree
+      const res = await fetch("https://sandbox.cashfree.com/pg/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-client-id": process.env.CASHFREE_APP_ID,
+          "x-client-secret": process.env.CASHFREE_SECRET_KEY,
+          "x-api-version": "2022-09-01",
+        },
+        body: JSON.stringify({
+          order_id,
+          order_amount: total,
+          order_currency: "INR",
+          customer_details: {
+            customer_id: String(userId),
+            customer_email: email,
+            customer_name: "User",
+            customer_phone: "9999999991",
+          },
+          order_meta: {
+            return_url: `${process.env.FRONTEND_URL}/success`,
+          },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        strapi.log.error("❌ Cashfree API Error:", data);
+        return ctx.throw(400, "Cashfree order creation failed");
+      }
+
+      // ✅ STEP 3: CREATE TEMP ORDER IN STRAPI (THIS WAS MISSING)
+      const createdOrder = await strapi.entityService.create("api::order.order", {
+        data: {
+          orderNumber: `CF-TEMP-${Date.now()}`,
+          cashfreeOrderId: order_id,
+          cartSnapshot: cartItems,
+          user: userId,
+          deliveryEmail: email,
+          totalAmount: total,
+          paymentStatus: "pending",
+          paymentProvider: "cashfree",
+          status: "processing",
+          deliveryStatus: "pending",
+        },
+      });
+
+      strapi.log.info("✅ TEMP ORDER CREATED:", createdOrder.id);
+
+      // ✅ STEP 4: return session
+      return ctx.send({
+        payment_session_id: data.payment_session_id,
+        order_id, // important for debugging
+      });
+
+    } catch (err) {
+      strapi.log.error("❌ Cashfree order error:", err);
+      return ctx.internalServerError("Cashfree order failed");
+    }
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+  // // ---------- RAZORPAY (new) ----------
+  // async createRazorpayOrder(ctx) {
+  //   try {
+  //     const { cartItems = [], email, userId, total } = ctx.request.body || {};
+
+  //     if (!userId) return ctx.badRequest("Login required");
+  //     if (!cartItems.length) return ctx.badRequest("Cart empty");
+  //     if (!email) return ctx.badRequest("Email required");
+
+  //     const razorpay = new Razorpay({
+  //       key_id: process.env.RAZORPAY_KEY_ID,
+  //       key_secret: process.env.RAZORPAY_KEY_SECRET,
+  //     });
+
+  //     const amountInPaise = Math.round(total * 100);
+
+  //     const order = await razorpay.orders.create({
+  //       amount: amountInPaise,
+  //       currency: "INR",
+  //       receipt: `order_rcpt_${Date.now()}`,
+  //       notes: {
+  //         userId: String(userId),
+  //         email,
+  //         cart: JSON.stringify(cartItems),
+  //       },
+  //     });
+
+  //     ctx.send({
+  //       success: true,
+  //       orderId: order.id,
+  //       amount: order.amount,
+  //       currency: order.currency,
+  //       key: process.env.RAZORPAY_KEY_ID, // for frontend checkout.js
+  //     });
+  //   } catch (err) {
+  //     strapi.log.error("❌ Razorpay order create failed:", err);
+  //     return ctx.internalServerError("Razorpay order creation failed");
+  //   }
+  // },
+
+  // async verifyRazorpayPayment(ctx) {
+  //   try {
+  //     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = ctx.request.body;
+
+  //     console.log("🧾 Verification Data:", ctx.request.body);
+
+  //     const body = razorpay_order_id + "|" + razorpay_payment_id;
+
+  //     const expectedSignature = crypto
+  //       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+  //       .update(body.toString())
+  //       .digest("hex");
+
+  //     console.log("✅ Expected Signature:", expectedSignature);
+  //     console.log("🧠 Received Signature:", razorpay_signature);
+
+  //     if (expectedSignature !== razorpay_signature) {
+  //       console.log("❌ Signature mismatch!");
+  //       return ctx.badRequest("Invalid payment signature");
+  //     }
+
+  //     console.log("✅ Razorpay Payment Verified Successfully!");
+  //     ctx.send({ verified: true });
+  //   } catch (err) {
+  //     strapi.log.error("❌ Razorpay verification failed:", err);
+  //     return ctx.internalServerError("Razorpay verification failed");
+  //   }
+  // },
+};

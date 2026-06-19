@@ -1,0 +1,105 @@
+// module.exports = {
+//   routes: [
+//     {
+//       method: "POST",
+//       path: "/orders/stripe-webhook",
+//       handler: "order.webhook",
+//       config: {
+//         auth: false, // Webhooks must be public (Stripe can't auth)
+//         middlewares: ["global::raw-body"], // important for Stripe signature
+//       },
+//     },
+//   ],
+// };
+
+// src/api/order/routes/order.js
+'use strict';
+
+module.exports = {
+  routes: [
+    // other generated CRUD routes are fine…
+    // ✅ KEEP DEFAULT CRUD ROUTES
+    {
+      method: 'POST',
+      path: '/orders',
+      handler: 'order.create', // 🔥 THIS RESTORES CREATE
+    },
+    {
+      method: 'PUT',
+      path: '/orders/:id',
+      handler: 'order.update',
+    },
+    // My custom routes below:
+    {
+      method: 'POST',
+      path: '/orders/stripe/webhook',
+      handler: 'order.webhook',
+      config: {
+        auth: false,       // webhooks must be public
+        policies: [],      // no policies
+        middlewares: [],   // IMPORTANT: no custom middleware here
+      },
+    },
+    // ✅ CASHFREE WEBHOOK (NEW)
+    // {
+    //   method: "POST",
+    //   path: "/orders/cashfree/webhook",
+    //   handler: "order.cashfreeWebhook",
+    //   config: {
+    //     auth: false,
+    //     policies: [],
+    //     middlewares: [], // 👈 IMPORTANT
+    //   },
+    // },
+    {
+      method: "POST",
+      path: "/orders/cashfree/webhook",
+      handler: "order.cashfreeWebhook",
+      config: {
+        auth: false,
+        policies: [],
+        middlewares: [],
+      },
+    },
+    {
+      method: "POST",
+      path: "/orders/manual-send",
+      handler: "order.sendKeysManually",
+      config: {},
+    },
+    {
+      method: "POST",
+      path: "/orders/resend",
+      handler: "order.resendEmail",
+      config: {},
+    },
+    {
+      method: "POST",
+      path: "/orders/delete",
+      handler: "order.deleteOrder",
+      config: {},
+    },
+    {
+      method: 'POST',
+      path: '/orders/razorpay/success',
+      handler: 'order.razorpaySuccess',
+      config: { auth: false },
+    },
+    {
+      method: 'GET',
+      path: '/orders',
+      handler: 'order.find',
+      config: {
+        auth: { scope: ['api::order.order.find'] }, // ✅ correct format
+      },
+    },
+    {
+      method: 'GET',
+      path: '/orders/:id',
+      handler: 'order.findOne',
+      config: {
+        auth: { scope: ['api::order.order.findOne'] }, // ✅ correct format
+      },
+    },
+  ],
+};

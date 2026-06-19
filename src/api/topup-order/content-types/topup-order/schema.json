@@ -1,0 +1,89 @@
+{
+  "kind": "collectionType",
+  "collectionName": "topup_orders",
+  "info": {
+    "singularName": "topup-order",
+    "pluralName": "topup-orders",
+    "displayName": "Topup Order"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderId": {
+      "type": "uid",
+      "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "cashfreeOrderId": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string",
+      "required": true
+    },
+    "country": {
+      "type": "string",
+      "required": true
+    },
+    "operatorId": {
+      "type": "integer",
+      "required": true
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "requestedAmount": {
+      "type": "decimal"
+    },
+    "deliveredAmount": {
+      "type": "decimal"
+    },
+    "currency": {
+      "type": "string"
+    },
+    "reloadlyTransactionId": {
+      "type": "string"
+    },
+    "operatorName": {
+      "type": "string"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "SUCCESS",
+        "FAILED",
+        "REFUNDED"
+      ]
+    },
+    "paymentStatus": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "PAID",
+        "FAILED"
+      ]
+    },
+    "rechargeStatus": {
+      "type": "enumeration",
+      "enum": [
+        "PENDING",
+        "SUCCESS",
+        "FAILED"
+      ]
+    },
+    "rawResponse": {
+      "type": "json"
+    },
+    "completedAt": {
+      "type": "datetime"
+    }
+  }
+}

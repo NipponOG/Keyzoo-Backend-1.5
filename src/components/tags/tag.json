@@ -1,0 +1,14 @@
+{
+  "collectionName": "components_tags_tags",
+  "info": {
+    "displayName": "Tag",
+    "icon": "hashtag"
+  },
+  "options": {},
+  "attributes": {
+    "Tags": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
