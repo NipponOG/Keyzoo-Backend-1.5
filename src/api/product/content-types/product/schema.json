@@ -171,7 +171,11 @@
       "default": "GAME",
       "enum": [
         "GAME",
-        "GIFT CARD"
+        "SOFTWARE",
+        "GIFT CARD",
+        "GAME DLC",
+        "GAME POINTS",
+        "DLC"
       ]
     },
     "item": {

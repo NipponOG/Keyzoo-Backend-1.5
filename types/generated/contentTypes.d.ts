@@ -1107,7 +1107,9 @@ export interface ApiGiftCardGiftCard extends Struct.CollectionTypeSchema {
     >;
     item: Schema.Attribute.Enumeration<['DIGITAL KEY']> &
       Schema.Attribute.DefaultTo<'DIGITAL KEY'>;
-    item_type: Schema.Attribute.Enumeration<['GAME', 'GIFT CARD']> &
+    item_type: Schema.Attribute.Enumeration<
+      ['GAME', 'SOFTWARE', 'GIFT CARD', 'GAME DLC', 'GAME POINTS', 'DLC']
+    > &
       Schema.Attribute.DefaultTo<'GIFT CARD'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1332,7 +1334,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       Schema.Attribute.DefaultTo<'processing'>;
     stripePaymentIntentId: Schema.Attribute.String;
     stripeSessionId: Schema.Attribute.String;
-    totalAmount: Schema.Attribute.Integer;
+    totalAmount: Schema.Attribute.Decimal;
     totalKeysAssigned: Schema.Attribute.Integer;
     totalKeysRequired: Schema.Attribute.Integer;
     updatedAt: Schema.Attribute.DateTime;
@@ -1724,7 +1726,9 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     isGiftCard: Schema.Attribute.Boolean;
     item: Schema.Attribute.Enumeration<['DIGITAL KEY']> &
       Schema.Attribute.DefaultTo<'DIGITAL KEY'>;
-    item_type: Schema.Attribute.Enumeration<['GAME', 'GIFT CARD']> &
+    item_type: Schema.Attribute.Enumeration<
+      ['GAME', 'SOFTWARE', 'GIFT CARD', 'GAME DLC', 'GAME POINTS', 'DLC']
+    > &
       Schema.Attribute.DefaultTo<'GAME'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
