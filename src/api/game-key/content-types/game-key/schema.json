@@ -27,6 +27,12 @@
       "relation": "manyToOne",
       "target": "api::product.product",
       "inversedBy": "gameKeys"
+    },
+    "giftCard": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::gift-card.gift-card",
+      "inversedBy": "gameKeys"
     }
   }
 }

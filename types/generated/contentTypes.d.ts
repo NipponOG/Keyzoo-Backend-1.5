@@ -955,6 +955,10 @@ export interface ApiGameKeyGameKey extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    giftCard: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::gift-card.gift-card'
+    >;
     isAvailable: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -1100,6 +1104,7 @@ export interface ApiGiftCardGiftCard extends Struct.CollectionTypeSchema {
     editiondescription: Schema.Attribute.RichText;
     gallery: Schema.Attribute.Media<'images', true>;
     game_tag_seo: Schema.Attribute.Component<'slug-seo-tag.tag', false>;
+    gameKeys: Schema.Attribute.Relation<'oneToMany', 'api::game-key.game-key'>;
     image: Schema.Attribute.Media<'images'>;
     interface_language: Schema.Attribute.Component<
       'game-language.interface-language',
