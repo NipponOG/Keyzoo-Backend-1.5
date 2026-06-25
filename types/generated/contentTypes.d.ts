@@ -1736,6 +1736,8 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       'api::product.product'
     > &
       Schema.Attribute.Private;
+    lowStockAlertSent: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     minimumRequirement: Schema.Attribute.Component<
       'game-requirements.minimum',
       false

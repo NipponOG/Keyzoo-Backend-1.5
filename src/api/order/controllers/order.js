@@ -8,79 +8,186 @@ const { Resend } = require("resend");
 const resend = new Resend(process.env.RESEND_API_KEY);
 const getModelFromType = require("../../../utils/getModelFromType");
 
+const LOW_STOCK_THRESHOLD = 5;
+
+const checkLowStock = async (
+  strapi,
+  productId
+) => {
+
+  const product =
+    await strapi.entityService.findOne(
+      "api::product.product",
+      productId,
+      {
+        populate: {
+          gameKeys: true,
+        },
+      }
+    );
+
+  if (!product) return;
+
+  const availableKeys =
+    product.gameKeys.filter(
+      key => key.isAvailable
+    ).length;
+
+  // Reset alert when restocked
+  if (
+    availableKeys > LOW_STOCK_THRESHOLD &&
+    product.lowStockAlertSent
+  ) {
+
+    await strapi.entityService.update(
+      "api::product.product",
+      product.id,
+      {
+        data: {
+          lowStockAlertSent: false,
+        },
+      }
+    );
+
+    console.log(
+      `Stock restored: ${product.title}`
+    );
+
+    return;
+  }
+
+  console.log(
+    `${product.title} has ${availableKeys} keys left`
+  );
+
+  if (
+    availableKeys <= LOW_STOCK_THRESHOLD &&
+    !product.lowStockAlertSent
+  ) {
+
+    console.log(
+      `LOW STOCK ALERT: ${product.title}`
+    );
+
+    await resend.emails.send({
+      from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_FROM_EMAIL}>`,
+      to: "reply@mail.keyden.shop",
+      subject: `⚠️ Low Stock Alert - ${product.title}`,
+      html: `
+    <div style="font-family:Arial,sans-serif;padding:20px;">
+      <h2 style="color:#dc2626;">
+        Low Stock Alert
+      </h2>
+
+      <p>
+        A product is running low on inventory.
+      </p>
+
+      <table
+        cellpadding="8"
+        cellspacing="0"
+        style="border-collapse:collapse;"
+      >
+        <tr>
+          <td><strong>Product</strong></td>
+          <td>${product.title}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Available Keys</strong></td>
+          <td>${availableKeys}</td>
+        </tr>
+
+        <tr>
+          <td><strong>Threshold</strong></td>
+          <td>${LOW_STOCK_THRESHOLD}</td>
+        </tr>
+      </table>
+
+      <br />
+
+      <p style="color:#dc2626;">
+        Please restock this product soon.
+      </p>
+    </div>
+  `,
+    });
+  }
+};
+
 // function generateEmailTemplate(order, cartItems, assignedKeys) {
 
-  // const orderDate = new Date().toLocaleDateString("en-IN", {
-  //   day: "2-digit",
-  //   month: "long",
-  //   year: "numeric",
-  // });
+// const orderDate = new Date().toLocaleDateString("en-IN", {
+//   day: "2-digit",
+//   month: "long",
+//   year: "numeric",
+// });
 
-  // const itemsHtml = cartItems
-  //   .map((item) => {
+// const itemsHtml = cartItems
+//   .map((item) => {
 
-  //     const itemType = item.type?.trim().toLowerCase(); // 🔥 FIX HERE
+//     const itemType = item.type?.trim().toLowerCase(); // 🔥 FIX HERE
 
-  //     const keysForProduct = (assignedKeys || [])
-  //       .filter(
-  //         (k) => k.productId === item.id && k.type === itemType
-  //       )
-  //       .map((k) => `<span style="color:#008000;">${k.key}</span>`).join("<br/>");
+//     const keysForProduct = (assignedKeys || [])
+//       .filter(
+//         (k) => k.productId === item.id && k.type === itemType
+//       )
+//       .map((k) => `<span style="color:#008000;">${k.key}</span>`).join("<br/>");
 
-  //     return `
-  //       <tr>
-  //         <td style="padding:15px; border-bottom:1px solid #eee;">
-  //           <strong>${item.title}</strong><br/>
-  //           Quantity: ${item.quantity}<br/>
-  //           Price: ₹${item.price}<br/>
-  //           Keys:<br/> ${keysForProduct || "<span style='color:orange;'>Pending delivery</span>"}
-  //         </td>
-  //       </tr>`;
-  //   })
-  //   .join("");
+//     return `
+//       <tr>
+//         <td style="padding:15px; border-bottom:1px solid #eee;">
+//           <strong>${item.title}</strong><br/>
+//           Quantity: ${item.quantity}<br/>
+//           Price: ₹${item.price}<br/>
+//           Keys:<br/> ${keysForProduct || "<span style='color:orange;'>Pending delivery</span>"}
+//         </td>
+//       </tr>`;
+//   })
+//   .join("");
 
-  // return `
-  // <html>
-  //   <body style="font-family: Arial, sans-serif; background:#ffffff; margin:0; padding:0;">
-  //     <table width="100%" cellpadding="0" cellspacing="0">
-  //       <tr>
-  //         <td align="center">
-  //           <table width="600" style="max-width:600px; margin:0 auto;">
-              
-  //             <tr>
-  //               <td style="padding:20px;">
-  //                 <img src="${process.env.EMAIL_LOGO_URL}" height="30"/>
-  //               </td>
-  //               <td style="padding:20px; text-align:right; font-size:12px;">
-  //                 ${orderDate}
-  //               </td>
-  //             </tr>
+// return `
+// <html>
+//   <body style="font-family: Arial, sans-serif; background:#ffffff; margin:0; padding:0;">
+//     <table width="100%" cellpadding="0" cellspacing="0">
+//       <tr>
+//         <td align="center">
+//           <table width="600" style="max-width:600px; margin:0 auto;">
 
-  //             <tr>
-  //               <td colspan="2" style="padding:20px; text-align:center;">
-  //                 <h2>Here are your keys 🎉</h2>
-  //                 <p>Thank you for your purchase.</p>
-  //                 <a href="${process.env.FRONTEND_URL}/orders/${order.id}"
-  //                    style="padding:10px 20px; background:#000; color:#fff; text-decoration:none;">
-  //                   View Order
-  //                 </a>
-  //               </td>
-  //             </tr>
+//             <tr>
+//               <td style="padding:20px;">
+//                 <img src="${process.env.EMAIL_LOGO_URL}" height="30"/>
+//               </td>
+//               <td style="padding:20px; text-align:right; font-size:12px;">
+//                 ${orderDate}
+//               </td>
+//             </tr>
 
-  //             ${itemsHtml}
+//             <tr>
+//               <td colspan="2" style="padding:20px; text-align:center;">
+//                 <h2>Here are your keys 🎉</h2>
+//                 <p>Thank you for your purchase.</p>
+//                 <a href="${process.env.FRONTEND_URL}/orders/${order.id}"
+//                    style="padding:10px 20px; background:#000; color:#fff; text-decoration:none;">
+//                   View Order
+//                 </a>
+//               </td>
+//             </tr>
 
-  //             <tr>
-  //               <td colspan="2" style="background:#000; color:#fff; padding:20px; text-align:center;">
-  //                 Support: ${process.env.SUPPORT_EMAIL}
-  //               </td>
-  //             </tr>
+//             ${itemsHtml}
 
-  //           </table>
-  //         </td>
-  //       </tr>
-  //     </table>
-  //   </body>
-  // </html>`;
+//             <tr>
+//               <td colspan="2" style="background:#000; color:#fff; padding:20px; text-align:center;">
+//                 Support: ${process.env.SUPPORT_EMAIL}
+//               </td>
+//             </tr>
+
+//           </table>
+//         </td>
+//       </tr>
+//     </table>
+//   </body>
+// </html>`;
 // }
 
 function generateEmailTemplate(order, cartItems) {
@@ -294,7 +401,7 @@ function generateEmailTemplate(order, cartItems) {
 
                       <td align="right" style="padding-top:8px;">
                         <strong>
-                          ₹${order.totalAmount}
+                          ₹${(order.totalAmount / 100).toFixed(2)}
                         </strong>
                       </td>
                     </tr>
@@ -558,6 +665,10 @@ module.exports = createCoreController("api::order.order", ({ strapi }) => ({
             key: key.code,
           });
         }
+        await checkLowStock(
+          strapi,
+          entity.id
+        );
       }
 
       const totalRequiredKeys = cartItems.reduce(

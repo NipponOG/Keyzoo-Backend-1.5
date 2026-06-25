@@ -261,6 +261,10 @@
       "component": "shared.seo",
       "repeatable": false
     },
+    "lowStockAlertSent": {
+      "type": "boolean",
+      "default": false
+    },
     "Tags": {
       "type": "dynamiczone",
       "components": [
