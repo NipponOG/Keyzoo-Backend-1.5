@@ -951,7 +951,10 @@ export interface ApiGameKeyGameKey extends Struct.CollectionTypeSchema {
   };
   attributes: {
     assignedAt: Schema.Attribute.DateTime;
-    code: Schema.Attribute.String;
+    batchId: Schema.Attribute.String;
+    code: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -966,11 +969,14 @@ export interface ApiGameKeyGameKey extends Struct.CollectionTypeSchema {
       'api::game-key.game-key'
     > &
       Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
     product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
+    soldAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    uploadedAt: Schema.Attribute.DateTime;
   };
 }
 

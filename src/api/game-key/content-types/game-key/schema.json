@@ -10,17 +10,30 @@
   "options": {
     "draftAndPublish": false
   },
-  "pluginOptions": {},
   "attributes": {
     "code": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "isAvailable": {
       "type": "boolean",
       "default": true
     },
+    "uploadedAt": {
+      "type": "datetime"
+    },
     "assignedAt": {
       "type": "datetime"
+    },
+    "soldAt": {
+      "type": "datetime"
+    },
+    "batchId": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "text"
     },
     "product": {
       "type": "relation",
