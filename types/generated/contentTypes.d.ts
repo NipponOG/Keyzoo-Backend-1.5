@@ -1155,6 +1155,7 @@ export interface ApiGiftCardGiftCard extends Struct.CollectionTypeSchema {
       false
     >;
     title: Schema.Attribute.String;
+    type: Schema.Attribute.String & Schema.Attribute.DefaultTo<'gift-card'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

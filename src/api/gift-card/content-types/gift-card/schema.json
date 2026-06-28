@@ -199,6 +199,10 @@
       "relation": "oneToMany",
       "target": "api::game-key.game-key",
       "mappedBy": "giftCard"
+    },
+    "type": {
+      "type": "string",
+      "default": "gift-card"
     }
   }
 }
