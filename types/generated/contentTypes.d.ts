@@ -502,6 +502,33 @@ export interface ApiAdBannerSectionAdBannerSection
   };
 }
 
+export interface ApiAdminAuthAdminAuth extends Struct.CollectionTypeSchema {
+  collectionName: 'admin_auths';
+  info: {
+    displayName: 'Admin Auth';
+    pluralName: 'admin-auths';
+    singularName: 'admin-auth';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::admin-auth.admin-auth'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
@@ -3224,6 +3251,8 @@ export interface PluginUsersPermissionsUser
       'oneToMany',
       'api::stock-alert.stock-alert'
     >;
+    twoFactorEnabled: Schema.Attribute.Boolean;
+    twoFactorSecret: Schema.Attribute.Text;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -3249,6 +3278,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
       'api::ad-banner-section.ad-banner-section': ApiAdBannerSectionAdBannerSection;
+      'api::admin-auth.admin-auth': ApiAdminAuthAdminAuth;
       'api::author.author': ApiAuthorAuthor;
       'api::binance-gift-card.binance-gift-card': ApiBinanceGiftCardBinanceGiftCard;
       'api::blog.blog': ApiBlogBlog;

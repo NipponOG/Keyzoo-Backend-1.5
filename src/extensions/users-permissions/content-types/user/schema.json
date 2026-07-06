@@ -77,6 +77,12 @@
     },
     "lastName": {
       "type": "string"
+    },
+    "twoFactorEnabled": {
+      "type": "boolean"
+    },
+    "twoFactorSecret": {
+      "type": "text"
     }
   }
 }

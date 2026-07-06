@@ -1,0 +1,14 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admin_auths",
+  "info": {
+    "singularName": "admin-auth",
+    "pluralName": "admin-auths",
+    "displayName": "Admin Auth"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {}
+}
