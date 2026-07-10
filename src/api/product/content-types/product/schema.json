@@ -156,6 +156,25 @@
         "Sweden"
       ]
     },
+    "platform": {
+      "type": "enumeration",
+      "enum": [
+        "psn",
+        "xbox",
+        "steam",
+        "spotify",
+        "roblox",
+        "binance"
+      ]
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "gift-card",
+        "game",
+        "subscription"
+      ]
+    },
     "workPlatform": {
       "type": "enumeration",
       "enum": [

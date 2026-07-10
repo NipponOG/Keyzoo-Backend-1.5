@@ -63,7 +63,7 @@
       "type": "decimal"
     },
     "notice": {
-      "type": "string"
+      "type": "text"
     },
     "description": {
       "type": "richtext"
@@ -124,6 +124,37 @@
         "images"
       ]
     },
+    "region": {
+      "type": "enumeration",
+      "enum": [
+        "Europe",
+        "United states",
+        "Global",
+        "Russia",
+        "United kingdom",
+        "China",
+        "Row (rest of world)",
+        "Latin america",
+        "Asia",
+        "Germany",
+        "Australia",
+        "Brazil",
+        "India",
+        "Japan",
+        "North America",
+        "Poland",
+        "Turkey",
+        "Hong Kong",
+        "Taiwan",
+        "Vietnam",
+        "Thailand",
+        "South Korea",
+        "Argentina",
+        "Canada",
+        "Denmark",
+        "Sweden"
+      ]
+    },
     "platform": {
       "type": "enumeration",
       "enum": [
@@ -179,13 +210,6 @@
       "type": "boolean",
       "default": true
     },
-    "platform_image": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images"
-      ]
-    },
     "relatedProducts": {
       "type": "relation",
       "relation": "oneToMany",
@@ -194,15 +218,76 @@
     "var_title": {
       "type": "string"
     },
+    "isBestSeller": {
+      "type": "boolean"
+    },
+    "isGiftCard": {
+      "type": "boolean"
+    },
     "gameKeys": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::game-key.game-key",
       "mappedBy": "giftCard"
     },
+    "stock_stetus": {
+      "type": "enumeration",
+      "enum": [
+        "Availavle",
+        "Sold Out"
+      ]
+    },
+    "hideRecomend": {
+      "type": "boolean"
+    },
+    "psn": {
+      "type": "boolean"
+    },
+    "platformIcons": {
+      "type": "string"
+    },
+    "platform_image": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "integer"
+    },
+    "relatedRegionProducts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::gift-card.gift-card"
+    },
+    "stock_alerts": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::stock-alert.stock-alert",
+      "mappedBy": "product"
+    },
+    "platform_icon_image": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
     "type": {
       "type": "string",
       "default": "gift-card"
+    },
+    "seo": {
+      "type": "component",
+      "component": "shared.seo",
+      "repeatable": false
+    },
+    "lowStockAlertSent": {
+      "type": "boolean",
+      "default": false
+    },
+    "Tags": {
+      "type": "dynamiczone",
+      "components": [
+        "tags.tag"
+      ]
     }
   }
 }

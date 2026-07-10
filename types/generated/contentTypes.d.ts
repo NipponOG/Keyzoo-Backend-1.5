@@ -1138,11 +1138,14 @@ export interface ApiGiftCardGiftCard extends Struct.CollectionTypeSchema {
     gallery: Schema.Attribute.Media<'images', true>;
     game_tag_seo: Schema.Attribute.Component<'slug-seo-tag.tag', false>;
     gameKeys: Schema.Attribute.Relation<'oneToMany', 'api::game-key.game-key'>;
+    hideRecomend: Schema.Attribute.Boolean;
     image: Schema.Attribute.Media<'images'>;
     interface_language: Schema.Attribute.Component<
       'game-language.interface-language',
       false
     >;
+    isBestSeller: Schema.Attribute.Boolean;
+    isGiftCard: Schema.Attribute.Boolean;
     item: Schema.Attribute.Enumeration<['DIGITAL KEY']> &
       Schema.Attribute.DefaultTo<'DIGITAL KEY'>;
     item_type: Schema.Attribute.Enumeration<
@@ -1155,32 +1158,79 @@ export interface ApiGiftCardGiftCard extends Struct.CollectionTypeSchema {
       'api::gift-card.gift-card'
     > &
       Schema.Attribute.Private;
+    lowStockAlertSent: Schema.Attribute.Boolean &
+      Schema.Attribute.DefaultTo<false>;
     minimumRequirement: Schema.Attribute.Component<
       'game-requirements.minimum',
       false
     >;
-    notice: Schema.Attribute.String;
+    notice: Schema.Attribute.Text;
     platform: Schema.Attribute.Enumeration<
       ['psn', 'xbox', 'steam', 'spotify', 'roblox', 'binance']
     >;
-    platform_image: Schema.Attribute.Media<'images'>;
+    platform_icon_image: Schema.Attribute.Media<'images'>;
+    platform_image: Schema.Attribute.String;
+    platformIcons: Schema.Attribute.String;
     price: Schema.Attribute.Decimal;
+    psn: Schema.Attribute.Boolean;
     publishedAt: Schema.Attribute.DateTime;
     publisher: Schema.Attribute.String;
+    rating: Schema.Attribute.Integer;
     recommendedRequirement: Schema.Attribute.Component<
       'game-requirements.recommended',
       false
+    >;
+    region: Schema.Attribute.Enumeration<
+      [
+        'Europe',
+        'United states',
+        'Global',
+        'Russia',
+        'United kingdom',
+        'China',
+        'Row (rest of world)',
+        'Latin america',
+        'Asia',
+        'Germany',
+        'Australia',
+        'Brazil',
+        'India',
+        'Japan',
+        'North America',
+        'Poland',
+        'Turkey',
+        'Hong Kong',
+        'Taiwan',
+        'Vietnam',
+        'Thailand',
+        'South Korea',
+        'Argentina',
+        'Canada',
+        'Denmark',
+        'Sweden',
+      ]
     >;
     relatedProducts: Schema.Attribute.Relation<
       'oneToMany',
       'api::gift-card.gift-card'
     >;
+    relatedRegionProducts: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::gift-card.gift-card'
+    >;
     releaseDate: Schema.Attribute.Date;
+    seo: Schema.Attribute.Component<'shared.seo', false>;
     slug: Schema.Attribute.UID<'title'>;
+    stock_alerts: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::stock-alert.stock-alert'
+    >;
+    stock_stetus: Schema.Attribute.Enumeration<['Availavle', 'Sold Out']>;
     subtitles_language: Schema.Attribute.Component<
       'game-language.subtitles-language',
       false
     >;
+    Tags: Schema.Attribute.DynamicZone<['tags.tag']>;
     title: Schema.Attribute.String;
     type: Schema.Attribute.String & Schema.Attribute.DefaultTo<'gift-card'>;
     updatedAt: Schema.Attribute.DateTime;
@@ -1744,6 +1794,9 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         'SWEDEN',
       ]
     >;
+    category: Schema.Attribute.Enumeration<
+      ['gift-card', 'game', 'subscription']
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1782,6 +1835,9 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       false
     >;
     notice: Schema.Attribute.String;
+    platform: Schema.Attribute.Enumeration<
+      ['psn', 'xbox', 'steam', 'spotify', 'roblox', 'binance']
+    >;
     platform_icon_image: Schema.Attribute.Media<'images'>;
     platform_image: Schema.Attribute.String;
     platformIcons: Schema.Attribute.String;
