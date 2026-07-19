@@ -83,6 +83,9 @@
     },
     "twoFactorSecret": {
       "type": "text"
+    },
+    "passkeyChallenge": {
+      "type": "text"
     }
   }
 }

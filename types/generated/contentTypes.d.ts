@@ -529,6 +529,55 @@ export interface ApiAdminAuthAdminAuth extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAdminPasskeyAdminPasskey
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'admin_passkeys';
+  info: {
+    description: 'Stores WebAuthn passkeys for admin users';
+    displayName: 'Admin Passkey';
+    pluralName: 'admin-passkeys';
+    singularName: 'admin-passkey';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    backedUp: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    challenge: Schema.Attribute.String;
+    counter: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    credentialID: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    deviceName: Schema.Attribute.String;
+    deviceType: Schema.Attribute.Enumeration<['singleDevice', 'multiDevice']> &
+      Schema.Attribute.Required;
+    lastUsedAt: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::admin-passkey.admin-passkey'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publicKey: Schema.Attribute.Text & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    transports: Schema.Attribute.JSON;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    userAgent: Schema.Attribute.Text;
+  };
+}
+
 export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   collectionName: 'authors';
   info: {
@@ -3291,6 +3340,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    passkeyChallenge: Schema.Attribute.Text;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -3335,6 +3385,7 @@ declare module '@strapi/strapi' {
       'admin::user': AdminUser;
       'api::ad-banner-section.ad-banner-section': ApiAdBannerSectionAdBannerSection;
       'api::admin-auth.admin-auth': ApiAdminAuthAdminAuth;
+      'api::admin-passkey.admin-passkey': ApiAdminPasskeyAdminPasskey;
       'api::author.author': ApiAuthorAuthor;
       'api::binance-gift-card.binance-gift-card': ApiBinanceGiftCardBinanceGiftCard;
       'api::blog.blog': ApiBlogBlog;

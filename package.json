@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
+    "@simplewebauthn/server": "^13.3.2",
     "@strapi-community/plugin-seo": "^2.1.1",
     "@strapi/plugin-cloud": "5.40.0",
     "@strapi/plugin-users-permissions": "5.40.0",
@@ -34,7 +35,8 @@
     "speakeasy": "^2.0.0",
     "strapi-provider-email-resend": "^1.0.4",
     "stripe": "^20.1.0",
-    "styled-components": "^6.0.0"
+    "styled-components": "^6.0.0",
+    "uuid": "^14.0.1"
   },
   "engines": {
     "node": ">=20.0.0 <=24.x.x",

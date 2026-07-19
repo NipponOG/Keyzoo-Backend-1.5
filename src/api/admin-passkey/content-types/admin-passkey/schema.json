@@ -1,0 +1,66 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admin_passkeys",
+  "info": {
+    "singularName": "admin-passkey",
+    "pluralName": "admin-passkeys",
+    "displayName": "Admin Passkey",
+    "description": "Stores WebAuthn passkeys for admin users"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "credentialID": {
+      "type": "text",
+      "required": true,
+      "unique": true
+    },
+    "publicKey": {
+      "type": "text",
+      "required": true
+    },
+    "counter": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "deviceType": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "singleDevice",
+        "multiDevice"
+      ]
+    },
+    "backedUp": {
+      "type": "boolean",
+      "default": false
+    },
+    "transports": {
+      "type": "json"
+    },
+    "lastUsedAt": {
+      "type": "datetime"
+    },
+    "userAgent": {
+      "type": "text"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "challenge": {
+      "type": "string"
+    },
+    "deviceName": {
+      "type": "string"
+    }
+  }
+}
