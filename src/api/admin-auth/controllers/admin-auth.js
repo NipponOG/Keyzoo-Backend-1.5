@@ -99,6 +99,9 @@
 
 "use strict";
 
+const bcrypt = require("bcryptjs");
+const getAuthenticatedAdmin = require("../../../utils/getAuthenticatedAdmin");
+
 module.exports = {
 
     async me(ctx) {
@@ -155,6 +158,89 @@ module.exports = {
 
             console.error(err);
             return ctx.unauthorized();
+
+        }
+
+    },
+
+    async changePassword(ctx) {
+
+        try {
+
+            const user = await getAuthenticatedAdmin(ctx);
+
+            if (!user) {
+                return;
+            }
+
+            const {
+                currentPassword,
+                newPassword,
+            } = ctx.request.body;
+
+            if (!currentPassword || !newPassword) {
+                return ctx.badRequest("All fields are required.");
+            }
+
+            const dbUser = await strapi.db
+                .query("plugin::users-permissions.user")
+                .findOne({
+                    where: {
+                        id: user.id,
+                    },
+                });
+
+            if (!dbUser) {
+                return ctx.notFound("User not found.");
+            }
+
+            const validPassword = await bcrypt.compare(
+                currentPassword,
+                dbUser.password
+            );
+
+            if (!validPassword) {
+                return ctx.badRequest("Current password is incorrect.");
+            }
+
+            if (currentPassword === newPassword) {
+                return ctx.badRequest(
+                    "New password must be different from your current password."
+                );
+            }
+
+            // We'll add stronger validation next.
+            if (newPassword.length < 8) {
+                return ctx.badRequest(
+                    "Password must be at least 8 characters."
+                );
+            }
+
+            const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+            await strapi.db
+                .query("plugin::users-permissions.user")
+                .update({
+                    where: {
+                        id: user.id,
+                    },
+                    data: {
+                        password: hashedPassword,
+                    },
+                });
+
+            return ctx.send({
+                success: true,
+                message: "Password updated successfully.",
+            });
+
+        } catch (err) {
+
+            strapi.log.error(err);
+
+            return ctx.internalServerError(
+                "Unable to change password."
+            );
 
         }
 

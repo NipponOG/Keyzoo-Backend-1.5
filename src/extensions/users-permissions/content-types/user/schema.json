@@ -86,6 +86,9 @@
     },
     "passkeyChallenge": {
       "type": "text"
+    },
+    "pendingDeviceName": {
+      "type": "string"
     }
   }
 }

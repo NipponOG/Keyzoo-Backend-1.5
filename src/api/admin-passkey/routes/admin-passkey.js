@@ -32,5 +32,20 @@ module.exports = {
                 auth: false,
             },
         },
+        {
+            method: "GET",
+            path: "/admin-passkey",
+            handler: "admin-passkey.list",
+        },
+        {
+            method: "PATCH",
+            path: "/admin-passkey/:documentId",
+            handler: "admin-passkey.rename",
+        },
+        {
+            method: "DELETE",
+            path: "/admin-passkey/:documentId",
+            handler: "admin-passkey.delete",
+        },
     ],
 };

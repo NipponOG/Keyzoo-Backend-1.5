@@ -43,6 +43,7 @@ module.exports = {
             // }
 
             const user = await getAuthenticatedAdmin(ctx);
+            const { deviceName } = ctx.request.body;
 
             if (!user) {
                 return;
@@ -91,6 +92,7 @@ module.exports = {
                     },
                     data: {
                         passkeyChallenge: options.challenge,
+                        pendingDeviceName: deviceName || "Unnamed Device",
                     },
                 });
 
@@ -175,10 +177,12 @@ module.exports = {
 
                     userAgent: ctx.request.header["user-agent"],
 
-                    deviceName:
-                        credentialDeviceType === "singleDevice"
-                            ? "This Device"
-                            : "Multi-device Passkey",
+                    // deviceName:
+                    //     credentialDeviceType === "singleDevice"
+                    //         ? "This Device"
+                    //         : "Multi-device Passkey",
+
+                    deviceName: user.pendingDeviceName || "Unnamed Device",
 
                     user: user.id,
                 },
@@ -192,6 +196,7 @@ module.exports = {
                     },
                     data: {
                         passkeyChallenge: null,
+                        pendingDeviceName: null,
                     },
                 });
 
@@ -405,6 +410,142 @@ module.exports = {
         } catch (err) {
             console.error(err);
             return ctx.badRequest("Unable to verify passkey.");
+        }
+    },
+
+    async list(ctx) {
+        try {
+
+            const user = await getAuthenticatedAdmin(ctx);
+
+            if (!user) {
+                return;
+            }
+
+            const passkeys = await strapi
+                .documents("api::admin-passkey.admin-passkey")
+                .findMany({
+                    filters: {
+                        user: {
+                            id: user.id,
+                        },
+                    },
+                    sort: ["createdAt:asc"],
+                });
+
+            return ctx.send({
+                success: true,
+                passkeys: passkeys.map((passkey) => ({
+                    documentId: passkey.documentId,
+                    deviceName: passkey.deviceName,
+                    deviceType: passkey.deviceType,
+                    backedUp: passkey.backedUp,
+                    lastUsedAt: passkey.lastUsedAt,
+                    createdAt: passkey.createdAt,
+                })),
+            });
+
+        } catch (err) {
+            console.error(err);
+
+            return ctx.badRequest(
+                "Unable to load passkeys."
+            );
+        }
+    },
+
+    async rename(ctx) {
+        try {
+            const user = await getAuthenticatedAdmin(ctx);
+
+            if (!user) {
+                return;
+            }
+
+            const { documentId } = ctx.params;
+            const { deviceName } = ctx.request.body;
+
+            if (!deviceName?.trim()) {
+                return ctx.badRequest("Device name is required.");
+            }
+
+            const passkey = await strapi.documents(
+                "api::admin-passkey.admin-passkey"
+            ).findOne({
+                documentId,
+                populate: {
+                    user: true,
+                },
+            });
+
+            if (!passkey) {
+                return ctx.notFound("Passkey not found.");
+            }
+
+            if (passkey.user?.documentId !== user.documentId) {
+                return ctx.forbidden("Unauthorized.");
+            }
+
+            const updated = await strapi.documents(
+                "api::admin-passkey.admin-passkey"
+            ).update({
+                documentId,
+                data: {
+                    deviceName: deviceName.trim(),
+                },
+            });
+
+            return ctx.send({
+                success: true,
+                passkey: updated,
+            });
+
+        } catch (err) {
+            strapi.log.error("Rename passkey failed", err);
+            return ctx.internalServerError("Unable to rename passkey.");
+        }
+    },
+
+    async delete(ctx) {
+        try {
+            const user = await getAuthenticatedAdmin(ctx);
+
+            if (!user) {
+                return;
+            }
+
+            const { documentId } = ctx.params;
+
+            const passkey = await strapi.documents(
+                "api::admin-passkey.admin-passkey"
+            ).findOne({
+                documentId,
+                populate: {
+                    user: true,
+                },
+            });
+
+            if (!passkey) {
+                return ctx.notFound("Passkey not found.");
+            }
+
+            if (passkey.user?.documentId !== user.documentId) {
+                return ctx.forbidden("Unauthorized.");
+            }
+
+            await strapi.documents(
+                "api::admin-passkey.admin-passkey"
+            ).delete({
+                documentId,
+            });
+
+            return ctx.send({
+                success: true,
+            });
+
+        } catch (err) {
+            strapi.log.error("Delete passkey failed", err);
+            return ctx.internalServerError("Unable to delete passkey.");
         }
     },
 };

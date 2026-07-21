@@ -16,5 +16,10 @@ module.exports = {
                 auth: false,
             },
         },
+        {
+            method: "POST",
+            path: "/admin-auth/change-password",
+            handler: "admin-auth.changePassword",
+        },
     ],
 };
