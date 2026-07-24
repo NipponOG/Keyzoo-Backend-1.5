@@ -246,4 +246,21 @@ module.exports = {
 
     },
 
+    async disable2FA(ctx) {
+    const admin = await getAuthenticatedAdmin(ctx);
+
+    await strapi.documents("plugin::users-permissions.user").update({
+        documentId: admin.documentId,
+        data: {
+            twoFactorEnabled: false,
+            twoFactorSecret: null,
+        },
+    });
+
+    ctx.body = {
+        success: true,
+        message: "Two-factor authentication disabled.",
+    };
+}
+
 };

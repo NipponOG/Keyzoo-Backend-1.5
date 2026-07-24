@@ -21,5 +21,10 @@ module.exports = {
             path: "/admin-auth/change-password",
             handler: "admin-auth.changePassword",
         },
+        {
+            method: "POST",
+            path: "/admin-auth/disable-2fa",
+            handler: "admin-auth.disable2FA",
+        }
     ],
 };
