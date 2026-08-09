@@ -257,12 +257,7 @@
       "relation": "oneToMany",
       "target": "api::gift-card.gift-card"
     },
-    "stock_alerts": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::stock-alert.stock-alert",
-      "mappedBy": "product"
-    },
+    
     "platform_icon_image": {
       "type": "media",
       "multiple": false,

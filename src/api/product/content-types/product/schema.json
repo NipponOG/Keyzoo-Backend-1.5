@@ -234,7 +234,7 @@
     "stock_stetus": {
       "type": "enumeration",
       "enum": [
-        "Availavle",
+        "Available",
         "Sold Out"
       ]
     },

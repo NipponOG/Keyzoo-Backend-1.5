@@ -2,7 +2,20 @@ const path = require('path');
 const fs = require('fs');
 
 module.exports = ({ env }) => {
-  const client = env('DATABASE_CLIENT', 'sqlite');
+  const client = env('DATABASE_CLIENT');
+
+  if (!client) {
+    throw new Error("DATABASE_CLIENT is not configured");
+  }
+
+  console.log("=================================");
+  console.log("STRAPI DATABASE CONFIG");
+  console.log("CLIENT:", client);
+  console.log("HOST:", env('DATABASE_HOST', 'not-set'));
+  console.log("PORT:", env('DATABASE_PORT', 'not-set'));
+  console.log("DATABASE:", env('DATABASE_NAME', 'not-set'));
+  console.log("USERNAME:", env('DATABASE_USERNAME', 'not-set'));
+  console.log("=================================");
 
   const connections = {
     mysql: {

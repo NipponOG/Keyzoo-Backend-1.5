@@ -185,7 +185,7 @@ export interface TagsTag extends Struct.ComponentSchema {
 }
 
 declare module '@strapi/strapi' {
-  export module Public {
+  export namespace Public {
     export interface ComponentSchemas {
       'blog.content': BlogContent;
       'blog.heading': BlogHeading;

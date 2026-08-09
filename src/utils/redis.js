@@ -3,11 +3,11 @@ const Redis = require("ioredis");
 const redis = new Redis(process.env.REDIS_URL);
 
 redis.on("connect", () => {
-    console.log("✅ Valkey connected successfully");
+    console.log("✅ Valkey or Redis connected successfully");
 });
 
 redis.on("error", (err) => {
-    console.error("❌ Valkey connection error:", err);
+    console.error("❌ Valkey or Redis connection error:", err);
 });
 
 module.exports = redis;
