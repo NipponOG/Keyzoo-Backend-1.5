@@ -49,6 +49,9 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::product.product"
+    },
+    "youtubeVideoId": {
+      "type": "string"
     }
   }
 }

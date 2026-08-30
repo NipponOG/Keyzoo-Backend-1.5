@@ -34,6 +34,7 @@
     "react-router-dom": "^6.0.0",
     "resend": "^6.6.0",
     "speakeasy": "^2.0.0",
+    "strapi-cache": "^1.12.1",
     "strapi-provider-email-resend": "^1.0.4",
     "stripe": "^20.1.0",
     "styled-components": "^6.0.0",
@@ -47,6 +48,5 @@
   "strapi": {
     "uuid": "a4f414f4-5dcc-42ef-afc8-48d9e562e755",
     "installId": "32b13d0e77eb3bfa08371b5abd9f59b32d14b0595de895d217a8df32293f61c6"
-  },
-  "devDependencies": {}
+  }
 }

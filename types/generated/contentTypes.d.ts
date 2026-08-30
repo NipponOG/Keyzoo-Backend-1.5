@@ -512,6 +512,7 @@ export interface ApiAdBannerSectionAdBannerSection
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    youtubeVideoId: Schema.Attribute.String;
   };
 }
 
@@ -1815,13 +1816,34 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   options: {
     draftAndPublish: true;
   };
+  pluginOptions: {
+    i18n: {
+      localized: true;
+    };
+  };
   attributes: {
-    age: Schema.Attribute.Media<'images'>;
+    age: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     audio_language: Schema.Attribute.Component<
       'game-language.audio-language',
       false
-    >;
-    Available: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    Available: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<true>;
     card_region: Schema.Attribute.Enumeration<
       [
         'EUROPE',
@@ -1851,63 +1873,201 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         'DENMARK',
         'SWEDEN',
       ]
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     category: Schema.Attribute.Enumeration<
       ['gift-card', 'game', 'subscription']
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    description: Schema.Attribute.RichText;
-    descriptionkey: Schema.Attribute.RichText;
-    developer: Schema.Attribute.String;
-    discountPrice: Schema.Attribute.Decimal;
-    editiondescription: Schema.Attribute.RichText;
-    gallery: Schema.Attribute.Media<'images', true>;
-    game_tag_seo: Schema.Attribute.Component<'slug-seo-tag.tag', false>;
+    description: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    descriptionkey: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    developer: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    discountPrice: Schema.Attribute.Decimal &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    editiondescription: Schema.Attribute.RichText &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    gallery: Schema.Attribute.Media<'images', true> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    game_tag_seo: Schema.Attribute.Component<'slug-seo-tag.tag', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     gameKeys: Schema.Attribute.Relation<'oneToMany', 'api::game-key.game-key'>;
-    hideRecomend: Schema.Attribute.Boolean;
-    image: Schema.Attribute.Media<'images'>;
+    hideRecomend: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    image: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     interface_language: Schema.Attribute.Component<
       'game-language.interface-language',
       false
-    >;
-    isBestSeller: Schema.Attribute.Boolean;
-    isGiftCard: Schema.Attribute.Boolean;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    isBestSeller: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    isGiftCard: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     item: Schema.Attribute.Enumeration<['DIGITAL KEY']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
       Schema.Attribute.DefaultTo<'DIGITAL KEY'>;
     item_type: Schema.Attribute.Enumeration<
-      ['GAME', 'SOFTWARE', 'GIFT CARD', 'GAME DLC', 'GAME POINTS', 'DLC']
+      ['game', 'software', 'gift card', 'game dlc', 'game points', 'dlc']
     > &
-      Schema.Attribute.DefaultTo<'GAME'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::product.product'
-    > &
-      Schema.Attribute.Private;
+    >;
     lowStockAlertSent: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
       Schema.Attribute.DefaultTo<false>;
     minimumRequirement: Schema.Attribute.Component<
       'game-requirements.minimum',
       false
-    >;
-    notice: Schema.Attribute.String;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    notice: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     platform: Schema.Attribute.Enumeration<
       ['psn', 'xbox', 'steam', 'spotify', 'roblox', 'binance']
-    >;
-    platform_icon_image: Schema.Attribute.Media<'images'>;
-    platform_image: Schema.Attribute.String;
-    platformIcons: Schema.Attribute.String;
-    price: Schema.Attribute.Decimal;
-    psn: Schema.Attribute.Boolean;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    platform_icon_image: Schema.Attribute.Media<'images'> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    platform_image: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    platformIcons: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    price: Schema.Attribute.Decimal &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    psn: Schema.Attribute.Boolean &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     publishedAt: Schema.Attribute.DateTime;
-    publisher: Schema.Attribute.String;
-    rating: Schema.Attribute.Integer;
+    publisher: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    rating: Schema.Attribute.Integer &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     recommendedRequirement: Schema.Attribute.Component<
       'game-requirements.recommended',
       false
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     region: Schema.Attribute.Enumeration<
       [
         'Europe',
@@ -1937,7 +2097,12 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
         'Denmark',
         'Sweden',
       ]
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     relatedProducts: Schema.Attribute.Relation<
       'oneToMany',
       'api::product.product'
@@ -1946,28 +2111,74 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::product.product'
     >;
-    releaseDate: Schema.Attribute.Date;
-    seo: Schema.Attribute.Component<'shared.seo', false>;
+    releaseDate: Schema.Attribute.Date &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    seo: Schema.Attribute.Component<'shared.seo', false> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     slug: Schema.Attribute.UID<'title'>;
     stock_alerts: Schema.Attribute.Relation<
       'oneToMany',
       'api::stock-alert.stock-alert'
     >;
-    stock_stetus: Schema.Attribute.Enumeration<['Available', 'Sold Out']>;
+    stock_stetus: Schema.Attribute.Enumeration<['Available', 'Sold Out']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     subtitles_language: Schema.Attribute.Component<
       'game-language.subtitles-language',
       false
-    >;
-    Tags: Schema.Attribute.DynamicZone<['tags.tag']>;
-    title: Schema.Attribute.String;
-    type: Schema.Attribute.String & Schema.Attribute.DefaultTo<'product'>;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    Tags: Schema.Attribute.DynamicZone<['tags.tag']> &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
+    type: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }> &
+      Schema.Attribute.DefaultTo<'product'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    var_title: Schema.Attribute.String;
+    var_title: Schema.Attribute.String &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
     workPlatform: Schema.Attribute.Enumeration<
       ['Windows', 'Steam', 'Epic Game', 'Xbox', 'PlayStation']
-    >;
+    > &
+      Schema.Attribute.SetPluginOptions<{
+        i18n: {
+          localized: true;
+        };
+      }>;
   };
 }
 

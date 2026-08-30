@@ -17,7 +17,6 @@
       "target": "api::product.product",
       "inversedBy": "stock_alerts"
     },
-    
     "user": {
       "type": "relation",
       "relation": "manyToOne",

@@ -10,10 +10,19 @@
   "options": {
     "draftAndPublish": true
   },
-  "pluginOptions": {},
+  "pluginOptions": {
+    "i18n": {
+      "localized": true
+    }
+  },
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "slug": {
       "type": "uid",
@@ -21,6 +30,11 @@
     },
     "image": {
       "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "multiple": false,
       "allowedTypes": [
         "images"
@@ -28,6 +42,11 @@
     },
     "card_region": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "EUROPE",
         "UNITED STATES",
@@ -58,61 +77,136 @@
       ]
     },
     "price": {
-      "type": "decimal"
+      "type": "decimal",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "discountPrice": {
-      "type": "decimal"
+      "type": "decimal",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "notice": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "description": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "descriptionkey": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "publisher": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "developer": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "releaseDate": {
-      "type": "date"
+      "type": "date",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "minimumRequirement": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "game-requirements.minimum",
       "repeatable": false
     },
     "recommendedRequirement": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "game-requirements.recommended",
       "repeatable": false
     },
     "audio_language": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "game-language.audio-language",
       "repeatable": false
     },
     "interface_language": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "game-language.interface-language",
       "repeatable": false
     },
     "subtitles_language": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "game-language.subtitles-language",
       "repeatable": false
     },
     "game_tag_seo": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "slug-seo-tag.tag",
       "repeatable": false
     },
     "gallery": {
       "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "multiple": true,
       "allowedTypes": [
         "images"
@@ -120,6 +214,11 @@
     },
     "age": {
       "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "multiple": false,
       "allowedTypes": [
         "images"
@@ -127,6 +226,11 @@
     },
     "region": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "Europe",
         "United states",
@@ -158,6 +262,11 @@
     },
     "platform": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "psn",
         "xbox",
@@ -169,6 +278,11 @@
     },
     "category": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "gift-card",
         "game",
@@ -177,6 +291,11 @@
     },
     "workPlatform": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "Windows",
         "Steam",
@@ -185,30 +304,33 @@
         "PlayStation"
       ]
     },
-    "item_type": {
-      "type": "enumeration",
-      "default": "GAME",
-      "enum": [
-        "GAME",
-        "SOFTWARE",
-        "GIFT CARD",
-        "GAME DLC",
-        "GAME POINTS",
-        "DLC"
-      ]
-    },
     "item": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "default": "DIGITAL KEY",
       "enum": [
         "DIGITAL KEY"
       ]
     },
     "editiondescription": {
-      "type": "richtext"
+      "type": "richtext",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "Available": {
       "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "default": true
     },
     "relatedProducts": {
@@ -217,13 +339,28 @@
       "target": "api::product.product"
     },
     "var_title": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "isBestSeller": {
-      "type": "boolean"
+      "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "isGiftCard": {
-      "type": "boolean"
+      "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "gameKeys": {
       "type": "relation",
@@ -233,25 +370,55 @@
     },
     "stock_stetus": {
       "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "enum": [
         "Available",
         "Sold Out"
       ]
     },
     "hideRecomend": {
-      "type": "boolean"
+      "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "psn": {
-      "type": "boolean"
+      "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "platformIcons": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "platform_image": {
-      "type": "string"
+      "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "rating": {
-      "type": "integer"
+      "type": "integer",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      }
     },
     "relatedRegionProducts": {
       "type": "relation",
@@ -266,6 +433,11 @@
     },
     "platform_icon_image": {
       "type": "media",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "multiple": false,
       "allowedTypes": [
         "images"
@@ -273,21 +445,57 @@
     },
     "type": {
       "type": "string",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "default": "product"
     },
     "seo": {
       "type": "component",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "component": "shared.seo",
       "repeatable": false
     },
     "lowStockAlertSent": {
       "type": "boolean",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "default": false
     },
     "Tags": {
       "type": "dynamiczone",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
       "components": [
         "tags.tag"
+      ]
+    },
+    "item_type": {
+      "type": "enumeration",
+      "pluginOptions": {
+        "i18n": {
+          "localized": true
+        }
+      },
+      "enum": [
+        "game",
+        "software",
+        "gift card",
+        "game dlc",
+        "game points",
+        "dlc"
       ]
     }
   }
